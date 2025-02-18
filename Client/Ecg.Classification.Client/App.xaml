@@ -1,0 +1,67 @@
+﻿<Application x:Class="Ecg.Classification.Client.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Ecg.Classification.Client"
+             StartupUri="MainWindow.xaml">
+	<!--StartupUri="Views/ClassificationResultView.xaml"-->
+    <Application.Resources>
+		<ResourceDictionary>
+			<!-- Colors -->
+			<Color x:Key="PrimaryColor">#008080</Color>
+			<!-- Teal -->
+			<Color x:Key="AccentColor">#FF007070</Color>
+			<!-- OrangeRed -->
+			<Color x:Key="BackgroundColor">#F0F0F0</Color>
+			<!-- Light Gray -->
+			<Color x:Key="GridLineColor">#D3D3D3</Color>
+			<!-- Light Gray Grid Lines -->
+			<Color x:Key="WaveformColor">#008000</Color>
+			<!-- Green for ECG Waveform -->
+
+			<!-- Brushes -->
+			<SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource PrimaryColor}"/>
+			<SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}"/>
+			<SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource BackgroundColor}"/>
+			<SolidColorBrush x:Key="GridLineBrush" Color="{StaticResource GridLineColor}"/>
+			<SolidColorBrush x:Key="WaveformBrush" Color="{StaticResource WaveformColor}"/>
+		<Style x:Key="TitleText" TargetType="TextBlock">
+			<Setter Property="FontSize" Value="18"/>
+			<Setter Property="FontWeight" Value="Bold"/>
+			<Setter Property="Foreground" Value="{StaticResource PrimaryBrush}"/>
+		</Style>
+
+		<Style x:Key="NormalText" TargetType="TextBlock">
+			<Setter Property="FontSize" Value="14"/>
+			<Setter Property="Foreground" Value="Black"/>
+		</Style>
+
+		<Style TargetType="Button">
+			<Setter Property="FontSize" Value="14"/>
+			<Setter Property="Padding" Value="8,4"/>
+			<Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="Cursor" Value="Hand" />
+				<!--<Setter Property="CornerRadius" Value="5"/>-->
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="Button">
+						<Border Background="{TemplateBinding Background}" 
+                        BorderBrush="{TemplateBinding BorderBrush}" 
+                        BorderThickness="{TemplateBinding BorderThickness}" 
+                        CornerRadius="5">
+							<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+						</Border>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsMouseOver" Value="True">
+								<Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		</ResourceDictionary>
+	</Application.Resources>
+</Application>

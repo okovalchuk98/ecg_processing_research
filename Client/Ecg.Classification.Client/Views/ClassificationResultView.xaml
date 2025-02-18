@@ -1,0 +1,166 @@
+﻿<Window x:Class="Ecg.Classification.Client.Views.ClassificationResultView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:converters="clr-namespace:Ecg.Classification.Client.Views.Converters"
+        xmlns:gif="http://wpfanimatedgif.codeplex.com"
+        xmlns:liveChart="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
+        xmlns:local="clr-namespace:Ecg.Classification.Client.Views"
+        mc:Ignorable="d"
+		Title="ЕКГ Аналіз" Height="450" Width="800" Icon="/Resources/app-icon.ico">
+	<Window.Background>
+		<ImageBrush ImageSource="/Resources/main-view-picture.png" Opacity="0.5" Stretch="Fill" />
+	</Window.Background>
+	<Window.Resources>
+		<converters:BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter" />
+		<Style x:Key="NavigationButtonStyle" TargetType="Button">
+			<Setter Property="Height" Value="32"/>
+			<Setter Property="Width" Value="32"/>
+			<Setter Property="Background" Value="#FF00AEFF"/>
+			<Setter Property="Foreground" Value="White" />
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="Button">
+						<Grid>
+							<Ellipse Fill="{TemplateBinding Background}"
+										 Stroke="{TemplateBinding BorderBrush}"
+										 StrokeThickness="{TemplateBinding BorderThickness}" />
+							<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+						</Grid>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+			<Style.Triggers>
+				<Trigger Property="IsEnabled" Value="False">
+					<Setter Property="Background" Value="LightGray"/>
+					<Setter Property="Opacity" Value="0.8" />
+				</Trigger>
+				<Trigger Property="IsMouseOver" Value="True">
+					<Setter Property="Background" Value="Blue"/>
+				</Trigger>
+			</Style.Triggers>
+		</Style>
+	</Window.Resources>
+	<i:Interaction.Triggers>
+		<i:EventTrigger EventName="Loaded">
+			<i:InvokeCommandAction Command="{Binding ViewLoaded}"/>
+		</i:EventTrigger>
+	</i:Interaction.Triggers>
+    <Grid>
+		<Grid>
+			<ListView ItemsSource="{Binding ClassificationResults}">
+				<ListView.Background>
+					<SolidColorBrush Color="White" Opacity="1"/>
+				</ListView.Background>
+				<ListView.ItemContainerStyle>
+					<Style TargetType="ListViewItem">
+						<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+					</Style>
+				</ListView.ItemContainerStyle>
+				<ListView.ItemTemplate>
+					<DataTemplate>
+						<Grid>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto"/>
+								<RowDefinition/>
+							</Grid.RowDefinitions>
+							<Grid Grid.Row="1">
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition />
+								</Grid.RowDefinitions>
+								<TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{Binding SingalName}" />
+								<liveChart:CartesianChart DisableAnimations="True"
+														  AnimationsSpeed="0"
+														  Hoverable="False" 
+														  Height="150"
+														  DataTooltip="{x:Null}"
+														  Series="{Binding SeriesCollection}"
+														  Grid.Row="1">
+									<liveChart:CartesianChart.AxisX>
+										<liveChart:Axis MinValue="0" ShowLabels="False" />
+									</liveChart:CartesianChart.AxisX>
+									<liveChart:CartesianChart.AxisY>
+										<liveChart:Axis ShowLabels="False" MinValue="0" MaxValue="1.1" />
+									</liveChart:CartesianChart.AxisY>
+								</liveChart:CartesianChart>
+								<Button HorizontalAlignment="Right" Height="35" Width="35" Command="{Binding RunAnalyzing}" Grid.Row="1">
+									<Button.Style>
+										<Style TargetType="Button">
+											<Setter Property="Margin" Value="0,0,10,0" />
+											<Setter Property="BorderThickness" Value="0"/>
+											<Setter Property="Background" Value="Transparent"/>
+											<Setter Property="Opacity" Value="0.8" />
+											<Setter Property="Visibility" Value="Collapsed" />
+											<Setter Property="Template">
+												<Setter.Value>
+													<ControlTemplate TargetType="Button">
+														<Border BorderBrush="{TemplateBinding BorderBrush}" 
+																BorderThickness="{TemplateBinding BorderThickness}"
+																Background="{TemplateBinding Background}"
+																CornerRadius="10">
+															<ContentPresenter Content="{TemplateBinding Content}" 
+																			  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+																			  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+														</Border>
+													</ControlTemplate>
+												</Setter.Value>
+											</Setter>
+											<Style.Triggers>
+												<Trigger Property="IsMouseOver" Value="True">
+													<Setter Property="Background" Value="White"/>
+												</Trigger>
+												<DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ListViewItem, Mode=FindAncestor}, Path=IsMouseOver}" Value="True">
+													<Setter Property="Visibility" Value="Visible"/>
+												</DataTrigger>
+											</Style.Triggers>
+										</Style>
+									</Button.Style>
+									<Image Source="pack://application:,,,/Resources/analysis.png" Margin="3" />
+								</Button>
+							</Grid>
+						</Grid>
+					</DataTemplate>
+				</ListView.ItemTemplate>
+			</ListView>
+			<Border CornerRadius="20" VerticalAlignment="Bottom"
+					HorizontalAlignment="Center"
+					Width="100"
+					Height="40"
+					Margin="10"
+					Background="LightGray">
+				<Grid Margin="2">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition />
+						<ColumnDefinition />
+						<ColumnDefinition />
+					</Grid.ColumnDefinitions>
+					<Button Grid.Column="0"
+							Style="{StaticResource NavigationButtonStyle}"
+							Command="{Binding PreviousBatch}"
+							Content="&lt;"
+							FontWeight="Bold"/>
+					<TextBlock Grid.Column="1" Text="{Binding BatchNumber}"
+							   HorizontalAlignment="Center"
+							   VerticalAlignment="Center"
+							   FontWeight="SemiBold" />
+					<Button Grid.Column="2"
+							Style="{StaticResource NavigationButtonStyle}"
+							Command="{Binding NextBatch}"
+							Content=">"
+							FontWeight="Bold"/>
+				</Grid>
+			</Border>
+		</Grid>
+		<Border Background="#80A2A2A2"
+						BorderBrush="Black"
+						BorderThickness="1"
+						Visibility="{Binding IsBusy, Converter={StaticResource booleanToVisibilityConverter}}">
+			<Grid>
+				<Image gif:ImageBehavior.AnimatedSource="pack://application:,,,/Resources/CardioCycleAnimation.gif" Height="200" Width="200" gif:ImageBehavior.RepeatBehavior="Forever" gif:ImageBehavior.AnimationSpeedRatio="0.2" />
+			</Grid>
+		</Border>
+	</Grid>
+</Window>
